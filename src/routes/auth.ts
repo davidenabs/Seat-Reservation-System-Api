@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
-import { AdminModel } from '@/models/Admin';
-import { AuthService } from '@/services/AuthService';
-import { BookingService } from '@/services/BookingService';
-import { validateRequest } from '@/middleware/validateRequest';
-import { authenticateAdmin } from '@/middleware/auth';
+import { AdminModel } from '../models/Admin';
+import { AuthService } from '../services/AuthService';
+import { BookingService } from '../services/BookingService';
+import { validateRequest } from '../middleware/validateRequest';
+import { authenticateAdmin } from '../middleware/auth';
 import {
     adminLoginSchema,
     createAdminSchema,
@@ -13,8 +13,8 @@ import {
     resetPasswordSchema,
     updateAdminSchema,
     adminQuerySchema,
-} from '@/dtos/index.dto';
-import { AuthRequest } from '@/types';
+} from '../dtos/index.dto';
+import { AuthRequest } from '../types';
 
 const router = Router();
 const authService = new AuthService();

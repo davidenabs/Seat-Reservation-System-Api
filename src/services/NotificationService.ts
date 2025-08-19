@@ -1,9 +1,9 @@
-import config from '@/config/environment';
-import { User, Booking, BookingRequest } from '@/types/index';
-import { sendEmail } from '@/utils/email';
-import { EmailTemplateBuilder } from '@/utils/emailTemplates';
-import { logger } from '@/utils/logger';
-import { sendSMS } from '@/utils/sms';
+import config from '../config/environment';
+import { User, Booking, BookingRequest } from '../types/index';
+import { sendEmail } from '../utils/email';
+import { EmailTemplateBuilder } from '../utils/emailTemplates';
+import { logger } from '../utils/logger';
+import { sendSMS } from '../utils/sms';
 
 export class NotificationService {
 
@@ -12,7 +12,7 @@ export class NotificationService {
     const html = emailTemplates.generateBookingConfirmation(booking);
 
     const mailOptions = {
-      from: process.env.FROM_EMAIL || 'noreply@eventhall.com',
+      from: process.env.FROM_EMAIL || 'noreply..eventhall.com',
       to: user.email,
       subject: 'Booking Confirmation - Event Hall Reservation',
       html,
@@ -60,7 +60,7 @@ export class NotificationService {
 
     try {
       const subject = 'Verify Your Email - Booking Confirmation';
-     
+
       const html = emailTemplates.generateOTPEmail(
         {
           userEmail: email,
@@ -70,7 +70,7 @@ export class NotificationService {
       );
       await sendEmail({ to: email, subject, html });
     } catch (error) {
-      logger.error('Failed to send OTP email:', error);
+      logger.error('Failed to send OTP email2:', error);
     }
   }
 

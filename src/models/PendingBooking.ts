@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { BookingRequest } from '@/types/index';
+import { BookingRequest } from '../types/index';
 
 interface IPendingBooking extends Document {
     tempId: string;

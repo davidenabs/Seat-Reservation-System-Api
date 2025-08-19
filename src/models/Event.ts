@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { Event } from '@/types/index';
+import { Event } from '../types/index';
 
 const eventSchema = new Schema<Event>({
   date: {

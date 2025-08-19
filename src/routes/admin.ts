@@ -1,17 +1,17 @@
 
 
 import { Router } from 'express';
-import { UserModel } from '@/models/User';
-import { EventModel } from '@/models/Event';
-import { BookingModel } from '@/models/Booking';
-import { NotificationService } from '@/services/NotificationService';
+import { UserModel } from '../models/User';
+import { EventModel } from '../models/Event';
+import { BookingModel } from '../models/Booking';
+import { NotificationService } from '../services/NotificationService';
 import { startOfDay, endOfDay } from 'date-fns';
-import { validateRequest } from '@/middleware/validateRequest';
-import { getAllBookingsSchema, ticketIdParamsSchema } from '@/dtos/index.dto';
-import { ApiResponse } from '@/types';
-import { BookingService } from '@/services/BookingService';
-import { SettingsService } from '@/services/SettingsService';
-import { EventService } from '@/services/EventService';
+import { validateRequest } from '../middleware/validateRequest';
+import { getAllBookingsSchema, ticketIdParamsSchema } from '../dtos/index.dto';
+import { ApiResponse } from '../types';
+import { BookingService } from '../services/BookingService';
+import { SettingsService } from '../services/SettingsService';
+import { EventService } from '../services/EventService';
 
 const router = Router();
 const notificationService = new NotificationService();

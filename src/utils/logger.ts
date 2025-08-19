@@ -1,5 +1,5 @@
 // src/utils/logger.ts
-import config from '@/config/environment';
+import config from '../config/environment';
 import winston from 'winston';
 
 // Define log levels

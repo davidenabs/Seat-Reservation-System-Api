@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { SystemSettings } from '@/types/index';
+import { SystemSettings } from '../types/index';
 
 const systemSettingsSchema = new Schema<SystemSettings>({
     reservationOpenDate: {

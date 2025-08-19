@@ -1,4 +1,4 @@
-import config from '@/config/environment';
+import config from '../config/environment';
 import AfricasTalking from 'africastalking';
 import { logger } from './logger';
 

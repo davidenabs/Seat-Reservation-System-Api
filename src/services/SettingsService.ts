@@ -1,6 +1,6 @@
-import { NotFoundError } from "@/middleware/errorHandler";
-import { SystemSettingsModel } from "@/models/SystemSettings";
-import { ApiResponse } from "@/types";
+import { NotFoundError } from "../middleware/errorHandler";
+import { SystemSettingsModel } from "../models/SystemSettings";
+import { ApiResponse } from "../types";
 
 
 export async function getSystemSettings(): Promise<any> {

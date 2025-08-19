@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { BookingService } from '@/services/BookingService';
-import { ApiResponse } from '@/types/index';
-import { validateRequest } from '@/middleware/validateRequest';
-import { bookingSchema, cancelReservationParamsSchema, otpVerificationSchema, ticketIdParamsSchema } from '@/dtos/index.dto';
+import { BookingService } from '../services/BookingService';
+import { ApiResponse } from '../types/index';
+import { validateRequest } from '../middleware/validateRequest';
+import { bookingSchema, cancelReservationParamsSchema, otpVerificationSchema, ticketIdParamsSchema } from '../dtos/index.dto';
 
 const router = Router();
 const bookingService = new BookingService();

@@ -1,7 +1,7 @@
 import { Router, Response } from 'express';
 import mongoose from 'mongoose';
-import { logger } from '@/utils/logger';
-import config from '@/config/environment';
+import { logger } from '../utils/logger';
+import config from '../config/environment';
 
 // Define a simple model for health check (optional, for lightweight query)
 const HealthCheckSchema = new mongoose.Schema({

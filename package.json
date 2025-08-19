@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
-    "dev": "nodemon --watch src --ext ts,tsx,json --exec 'ts-node -r tsconfig-paths/register src/app.ts'",
+    "dev": "nodemon --watch src --ext ts,tsx,json --exec 'ts-node src/app.ts'",
     "test": "jest",
     "test:watch": "jest --watch"
   },

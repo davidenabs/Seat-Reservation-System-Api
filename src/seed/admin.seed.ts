@@ -1,5 +1,5 @@
-import { AdminModel } from "@/models/Admin";
-import { logger } from "@/utils/logger";
+import { AdminModel } from "../models/Admin";
+import { logger } from "../utils/logger";
 import bcrypt from 'bcryptjs';
 
 export default async function seedAdmins() {
@@ -9,8 +9,8 @@ export default async function seedAdmins() {
         // Default admin data
         const adminData = [{
             username: "superadmin",
-            email: "superadmin@company.com",
-            password: await bcrypt.hash("Admin@123", salt), // This will be hashed by the pre-save hook
+            email: "superadmin..company.com",
+            password: await bcrypt.hash("Admin..123", salt), // This will be hashed by the pre-save hook
             role: "superadmin"
         }, {
             username: "admin",

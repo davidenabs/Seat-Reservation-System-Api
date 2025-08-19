@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import config from './environment';
-import { logger } from '@/utils/logger';
-import seedAdmins from '@/seed/admin.seed';
-import seedSystemSettings from '@/seed/settings.seed';
+import { logger } from '../utils/logger';
+import seedAdmins from '../seed/admin.seed';
+import seedSystemSettings from '../seed/settings.seed';
 
 dotenv.config();
 

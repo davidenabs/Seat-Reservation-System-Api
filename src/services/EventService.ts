@@ -1,6 +1,6 @@
-import { BookingModel } from "@/models/Booking";
-import { EventModel } from "@/models/Event";
-import { ApiResponse, Event } from "@/types";
+import { BookingModel } from "../models/Booking";
+import { EventModel } from "../models/Event";
+import { ApiResponse, Event } from "../types";
 import { endOfDay, startOfDay } from "date-fns";
 
 export class EventService {

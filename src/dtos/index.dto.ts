@@ -1,4 +1,4 @@
-import { BookingStatus } from '@/types';
+import { BookingStatus } from '../types';
 import Joi from 'joi';
 
 export const availableSeatsParamsSchema = Joi.object({

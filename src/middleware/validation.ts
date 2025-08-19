@@ -1,6 +1,6 @@
 // import Joi from 'joi';
 // import { Request, Response, NextFunction } from 'express';
-// import { ApiResponse } from '@/types/index';
+// import { ApiResponse } from '../types/index';
 
 
 // export const validateBooking = (req: Request, res: Response, next: NextFunction) => {

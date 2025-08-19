@@ -3,20 +3,20 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
-import connectDB from '@/config/database';
+import connectDB from './config/database';
 
 // Import routes
-import bookingRoutes from '@/routes/booking';
-import adminRoutes from '@/routes/admin';
-import config from '@/config/environment';
-import appHealth from '@/routes/AppHealth';
-import authRoute from '@/routes/auth';
-import { logger } from '@/utils/logger';
-import { errorHandler } from '@/middleware/errorHandler';
+import bookingRoutes from './routes/booking';
+import adminRoutes from './routes/admin';
+import config from './config/environment';
+import appHealth from './routes/AppHealth';
+import authRoute from './routes/auth';
+import { logger } from './utils/logger';
+import { errorHandler } from './middleware/errorHandler';
 import { authenticateAdmin } from './middleware/auth';
 
-import swaggerUi from 'swagger-ui-express';
-import swaggerJSDoc from 'swagger-jsdoc';
+// import swaggerUi from 'swagger-ui-express';
+// import swaggerJSDoc from 'swagger-jsdoc';
 import { sendEmail } from './utils/email';
 
 dotenv.config();
@@ -25,34 +25,34 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Swagger definition
-const swaggerOptions = {
-  swaggerDefinition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'My API',
-      version: '1.0.0',
-      description: 'API documentation using Swagger',
-    },
-    servers: [
-      {
-        url: `http://localhost:${PORT}`,
-      },
-    ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
-      },
-    },
-  },
-  apis: ['./routes/*.ts'], // Path to your API docs
-};
+// const swaggerOptions = {
+//   swaggerDefinition: {
+//     openapi: '3.0.0',
+//     info: {
+//       title: 'My API',
+//       version: '1.0.0',
+//       description: 'API documentation using Swagger',
+//     },
+//     servers: [
+//       {
+//         url: `http://localhost:${PORT}`,
+//       },
+//     ],
+//     components: {
+//       securitySchemes: {
+//         bearerAuth: {
+//           type: 'http',
+//           scheme: 'bearer',
+//           bearerFormat: 'JWT',
+//         },
+//       },
+//     },
+//   },
+//   apis: ['./routes/*.ts'], // Path to your API docs
+// };
 
-const swaggerDocs = swaggerJSDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+// const swaggerDocs = swaggerJSDoc(swaggerOptions);
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 
 // Rate limiting

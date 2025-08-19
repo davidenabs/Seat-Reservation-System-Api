@@ -1,19 +1,19 @@
-import { UserModel } from '@/models/User';
-import { EventModel } from '@/models/Event';
-import { BookingModel } from '@/models/Booking';
-import { SystemSettingsModel } from '@/models/SystemSettings';
+import { UserModel } from '../models/User';
+import { EventModel } from '../models/Event';
+import { BookingModel } from '../models/Booking';
+import { SystemSettingsModel } from '../models/SystemSettings';
 import { QRService } from './QRService';
 import { v4 as uuidv4 } from 'uuid';
 import { startOfDay, endOfDay, isAfter, isBefore, addMinutes } from 'date-fns';
-import { BookingRequest, Booking, ApiResponse, BookingStatus, PendingBooking, OTPVerificationRequest, CancelBookingRequest } from '@/types/index';
-import { SeatUtils } from '@/utils/seat';
-import { NotFoundError } from '@/middleware/errorHandler';
-import { logger } from '@/utils/logger';
+import { BookingRequest, Booking, ApiResponse, BookingStatus, PendingBooking, OTPVerificationRequest, CancelBookingRequest } from '../types/index';
+import { SeatUtils } from '../utils/seat';
+import { NotFoundError } from '../middleware/errorHandler';
+import { logger } from '../utils/logger';
 import { NotificationService } from './NotificationService';
-import { OTPModel } from '@/models/OTP';
-import { PendingBookingModel } from '@/models/PendingBooking';
+import { OTPModel } from '../models/OTP';
+import { PendingBookingModel } from '../models/PendingBooking';
 import { getSystemSettings } from './SettingsService';
-import config from '@/config/environment';
+import config from '../config/environment';
 import * as crypto from 'crypto';
 
 interface BookingRequestWithSeats extends Omit<BookingRequest, 'seatNumbers'> {

@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import { AdminModel } from '@/models/Admin';
-import { ApiResponse, LoginRequest, CreateAdminRequest, ChangePasswordRequest, ForgotPasswordRequest, ResetPasswordRequest } from '@/types';
-import config from '@/config/environment';
-import { logger } from '@/utils/logger';
+import { AdminModel } from '../models/Admin';
+import { ApiResponse, LoginRequest, CreateAdminRequest, ChangePasswordRequest, ForgotPasswordRequest, ResetPasswordRequest } from '../types';
+import config from '../config/environment';
+import { logger } from '../utils/logger';
 import { NotificationService } from './NotificationService';
 
 

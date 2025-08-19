@@ -1,5 +1,5 @@
-import { SystemSettingsModel } from "@/models/SystemSettings";
-import { logger } from "@/utils/logger";
+import { SystemSettingsModel } from "../models/SystemSettings";
+import { logger } from "../utils/logger";
 
 export default async function seedSystemSettings() {
     try {

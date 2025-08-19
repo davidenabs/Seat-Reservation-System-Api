@@ -1,5 +1,5 @@
 import rateLimit from 'express-rate-limit';
-import { logger } from '@/utils/logger';
+import { logger } from '../utils/logger';
 
 export const rateLimiter = rateLimit({
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes

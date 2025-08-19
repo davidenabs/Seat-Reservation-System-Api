@@ -1,8 +1,8 @@
-// import config from '@/config/environment';
+// import config from '../config/environment';
 // import { MailtrapClient } from 'mailtrap';
 
 // const TOKEN = 'da9a9c0f1f96458a708ae310f06998cb';//|| config.mailtrap.token; // e.g. from your .env or config file
-// const SENDER_EMAIL = config.mailtrap.senderEmail; // e.g. 'no-reply@yourdomain.com'
+// const SENDER_EMAIL = config.mailtrap.senderEmail; // e.g. 'no-reply..yourdomain.com'
 
 // const client = new MailtrapClient({ token: TOKEN });
 
@@ -38,7 +38,7 @@
 //   }
 // };
 
-import config from '@/config/environment';
+import config from '../config/environment';
 import nodemailer from 'nodemailer';
 import { logger } from './logger';
 
@@ -62,25 +62,39 @@ import { logger } from './logger';
 
 // Looking to send emails in production? Check out our Email API/SMTP product!
 var transporter = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
+  host: "mail.themorayobrownshow.com",
+  port: 465,
+  secure: true, 
   auth: {
-    user: "be2d917dd5f2a1",
-    pass: "30544cafcdcd0e"
+    user: "hello@themorayobrownshow.com",
+    pass: "g!)(wE18yu-j"
+  },
+   tls: {
+    // Disable certificate validation
+    rejectUnauthorized: false
   }
 });
 
 export const sendEmail = async ({ to, subject, html }: { to: string; subject: string; html: string }) => {
   try {
     await transporter.sendMail({
-      from: process.env.SENDGRID_FROM_EMAIL!,
+      from: "hello@themorayobrownshow.com",
       to,
       subject,
       html
     });
     logger.info(`Email sent to ${to}`);
   } catch (err) {
-    logger.error('Email error:', err);
+    // Extract only serializable error properties
+    const errorInfo = {
+      message: err instanceof Error ? err.message : 'Unknown error',
+      code: (err as any)?.code,
+      command: (err as any)?.command,
+      response: (err as any)?.response,
+      responseCode: (err as any)?.responseCode
+    };
+
+    console.error('Email error:', errorInfo);
     throw err;
   }
 };

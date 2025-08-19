@@ -1,8 +1,8 @@
 // emailTemplates.js - Reusable Email Template System
 
-import { Booking, User, Event } from "@/types";
+import { Booking, User, Event } from "../types";
 import { formatDate } from "./formatDate";
-import config from "@/config/environment";
+import config from "../config/environment";
 
 export class EmailTemplateBuilder {
   private readonly baseStyles: string;
@@ -39,7 +39,8 @@ export class EmailTemplateBuilder {
             height: auto;
           }
           .status-icon {
-            display: inline-flex;
+            // display: inline-flex;
+            display: hidden;
             align-items: center;
             justify-content: center;
             width: 64px;

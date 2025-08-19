@@ -1,5 +1,5 @@
-import config from '@/config/environment';
-import { Booking } from '@/types/index';
+import config from '../config/environment';
+import { Booking } from '../types/index';
 import QRCode from 'qrcode';
 
 export class QRService {

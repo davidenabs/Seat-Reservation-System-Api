@@ -1,6 +1,6 @@
 import { Schema, model, Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { Admin } from '@/types/index';
+import { Admin } from '../types/index';
 
 const adminSchema = new Schema<Admin>({
   username: {
