@@ -13,11 +13,11 @@ import appHealth from './routes/AppHealth';
 import authRoute from './routes/auth';
 import { logger } from './utils/logger';
 import { errorHandler } from './middleware/errorHandler';
-import { authenticateAdmin } from './middleware/auth';
+// import { authenticateAdmin } from './middleware/auth';
 
 // import swaggerUi from 'swagger-ui-express';
 // import swaggerJSDoc from 'swagger-jsdoc';
-import { sendEmail } from './utils/email';
+// import { sendEmail } from './utils/email';
 
 dotenv.config();
 
@@ -88,7 +88,7 @@ app.get('/health', appHealth);
 // Routes
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/auth', authRoute);
-app.use('/api/admin', authenticateAdmin, adminRoutes);
+// app.use('/api/admin', authenticateAdmin, adminRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {
