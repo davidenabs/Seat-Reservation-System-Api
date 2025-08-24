@@ -33,7 +33,9 @@ export const bookingSchema = Joi.object({
   email: Joi.string().email().required(),
   phone: Joi.string().pattern(/^[0-9+\-\s()]+$/).min(10).max(20).required(),
   gender: Joi.string().valid('male', 'female', 'other').required(),
-  ageRange: Joi.string().valid('18-25', '26-35', '36-45', '46-55', '55+').required()
+  ageRange: Joi.string().valid('18-25', '26-35', '36-45', '46-55', '55+').required(),
+  aboutYourself: Joi.string().trim().max(500).optional().allow(''),
+  agreeToTerms: Joi.boolean().valid(true).required()
 });
 
 export const adminLoginSchema = Joi.object({

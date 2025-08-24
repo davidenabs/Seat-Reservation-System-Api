@@ -45,6 +45,10 @@ const bookingSchema = new Schema<Booking>({
   reservationToken: {
     type: String,
     required: true
+  },
+  attendedAt: {
+    type: Date,
+    required: false
   }
 }, {
   timestamps: true

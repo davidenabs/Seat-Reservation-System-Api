@@ -70,7 +70,7 @@ app.use(cors({
 }));
  app.disable('x-powered-by');
 
-app.use('/api/', limiter);
+// app.use('/api/', limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -88,7 +88,7 @@ app.get('/health', appHealth);
 // Routes
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/auth', authRoute);
-// app.use('/api/admin', authenticateAdmin, adminRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

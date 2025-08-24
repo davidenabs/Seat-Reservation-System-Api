@@ -1151,4 +1151,51 @@ export class BookingService {
             };
         }
     }
+
+    async resendBookingConfirmation(ticketId: string): Promise<ApiResponse<null>> {
+        try {
+            const booking = await BookingModel.findOne({ ticketId });
+            if (!booking) {
+                return {
+                    success: false,
+                    message: 'Booking not found',
+                    error: 'Booking not found'
+                };
+            }
+
+            const user = await UserModel.findOne({ _id: booking.user });
+            if (!user) {
+                return {
+                    success: false,
+                    message: 'User not found',
+                    error: 'User not found'
+                };
+            }
+
+            const event = await EventModel.findOne({ _id: booking.event });
+            if (!event) {
+                return {
+                    success: false,
+                    message: 'Event not found',
+                    error: 'Event not found'
+                };
+            }
+
+            await this.notificationService.sendBookingConfirmationEmail(user, booking, event);
+
+            return {
+                success: true,
+                message: 'Booking confirmation email resent successfully',
+                data: null
+            };
+        } catch (error: any) {
+            logger.error('Error resending booking confirmation email:', error);
+            return {
+                success: false,
+                message: 'Failed to resend booking confirmation email',
+                error: error.message,
+                data: null
+            };
+        }
+    }   
 }

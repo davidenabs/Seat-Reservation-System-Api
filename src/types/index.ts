@@ -28,7 +28,8 @@ export interface Event {
 export enum BookingStatus {
     Attending = 'attending',
     Cancelled = 'cancelled',
-    Attended = 'attended'
+    Attended = 'attended',
+    Voided = 'voided',
 }
 
 export interface Booking {
@@ -46,6 +47,7 @@ export interface Booking {
     updatedAt?: Date;
     cancelledAt?:Date;
     calendarLink?: string;
+    attendedAt?: Date;
 }
 
 // export interface Admin {
@@ -171,5 +173,42 @@ export interface CancelBookingRequest {
     ticketId: string;
     reservationToken: string;
     email?: string; // Optional for additional validation
+}
+
+export interface NotificationFilter {
+    eventDate?: string;
+    ageRange?: '18-25' | '26-35' | '36-45' | '46-55' | '55+';
+    gender?: 'male' | 'female' | 'other';
+    status?: BookingStatus[];
+}
+
+export interface NotificationRequest {
+    type: 'email' | 'sms' | 'both';
+    subject?: string; // For email notifications
+    message: string;
+    filters: NotificationFilter;
+    sendImmediately?: boolean;
+}
+
+export interface NotificationJob {
+    _id?: string;
+    type: 'email' | 'sms' | 'both';
+    subject?: string;
+    message: string;
+    recipients: {
+        userId: string;
+        name: string;
+        email?: string;
+        phone?: string;
+    }[];
+    status: 'pending' | 'processing' | 'completed' | 'failed';
+    totalRecipients: number;
+    sentCount: number;
+    failedCount: number;
+    createdAt?: Date;
+    updatedAt?: Date;
+    startedAt?: Date;
+    completedAt?: Date;
+    error?: string;
 }
 

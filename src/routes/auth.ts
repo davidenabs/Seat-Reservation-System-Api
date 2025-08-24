@@ -34,6 +34,21 @@ router.post('/login', validateRequest(adminLoginSchema, 'body'), async (req, res
     }
 });
 
+// Verify token
+router.get('/verify', async (req, res) => {
+    try {
+        const result = await authService.verifyToken(req.headers.authorization?.split(' ')[1] || '');
+        const statusCode = result.success ? 200 : 401;
+        res.status(statusCode).json(result);
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: 'Login failed',
+            error: error.message
+        });
+    }
+});
+
 // Forgot password
 router.post('/forgot-password', validateRequest(forgotPasswordSchema, 'body'), async (req, res) => {
     try {

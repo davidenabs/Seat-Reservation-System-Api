@@ -95,6 +95,24 @@ export class AuthService {
     }
   }
 
+  // Verify token
+  async verifyToken(token: string): Promise<ApiResponse<any>> {
+    try {
+      const decoded = jwt.verify(token, config.jwt.secret);
+      return {
+        success: true,
+        message: 'Token verified successfully',
+        data: decoded
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: 'Token verification failed',
+        error: error.message
+      };
+    }
+  }
+
   // Create new admin
   async createAdmin(adminData: CreateAdminRequest, creatorId: string): Promise<ApiResponse<any>> {
     try {

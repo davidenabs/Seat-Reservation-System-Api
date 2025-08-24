@@ -1,9 +1,11 @@
 import config from '../config/environment';
-import { User, Booking, BookingRequest } from '../types/index';
+import { User, Booking, BookingRequest, NotificationFilter, NotificationJob } from '../types/index';
 import { sendEmail } from '../utils/email';
 import { EmailTemplateBuilder } from '../utils/emailTemplates';
 import { logger } from '../utils/logger';
 import { sendSMS } from '../utils/sms';
+import { BookingModel } from '../models/Booking';
+import { startOfDay, endOfDay } from 'date-fns';
 
 export class NotificationService {
 
@@ -170,4 +172,219 @@ export class NotificationService {
   }
 
   async sendCancellationConfirmationEmail(booking: Booking): Promise<void> { }
+
+  /**
+   * Get filtered users based on notification criteria
+   */
+  async getFilteredUsers(filters: NotificationFilter): Promise<any[]> {
+    const pipeline: any[] = [];
+
+    // Build match query for bookings
+    let matchQuery: any = {};
+
+    // Filter by event date
+    if (filters.eventDate) {
+      const date = new Date(filters.eventDate);
+      const startOfEventDate = startOfDay(date);
+      const endOfEventDate = endOfDay(date);
+      matchQuery.eventDate = { $gte: startOfEventDate, $lte: endOfEventDate };
+    }
+
+    // Filter by booking status
+    if (filters.status && filters.status.length > 0) {
+      matchQuery.status = { $in: filters.status };
+    }
+
+    pipeline.push({ $match: matchQuery });
+
+    // Lookup user information
+    pipeline.push({
+      $lookup: {
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'userInfo'
+      }
+    });
+
+    pipeline.push({ $unwind: '$userInfo' });
+
+    // Add user-based filters
+    let userMatchConditions: any = {};
+
+    if (filters.gender) {
+      userMatchConditions['userInfo.gender'] = filters.gender;
+    }
+
+    if (filters.ageRange) {
+      userMatchConditions['userInfo.ageRange'] = filters.ageRange;
+    }
+
+    if (Object.keys(userMatchConditions).length > 0) {
+      pipeline.push({ $match: userMatchConditions });
+    }
+
+    // Group by user to avoid duplicates
+    pipeline.push({
+      $group: {
+        _id: '$userInfo._id',
+        name: { $first: '$userInfo.name' },
+        email: { $first: '$userInfo.email' },
+        phone: { $first: '$userInfo.phone' },
+        gender: { $first: '$userInfo.gender' },
+        ageRange: { $first: '$userInfo.ageRange' }
+      }
+    });
+
+    const users = await BookingModel.aggregate(pipeline);
+    return users.map(user => ({
+      userId: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      phone: user.phone
+    }));
+  }
+
+  /**
+   * Create email template with custom message
+   */
+  private createEmailTemplate(message: string, recipientName: string): string {
+    return `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+          <h1 style="color: white; margin: 0; font-size: 28px;">Event Hall Notification</h1>
+        </div>
+        
+        <div style="background: white; padding: 30px; border: 1px solid #e0e0e0; border-top: none;">
+          <p style="font-size: 16px; color: #333; margin-bottom: 20px;">Dear ${recipientName},</p>
+          
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea; margin: 20px 0;">
+            <p style="font-size: 16px; line-height: 1.6; color: #333; margin: 0;">${message}</p>
+          </div>
+          
+          <p style="font-size: 14px; color: #666; margin-top: 30px;">
+            Best regards,<br>
+            <strong>Event Hall Team</strong>
+          </p>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; border: 1px solid #e0e0e0; border-top: none;">
+          <p style="font-size: 12px; color: #999; margin: 0;">
+            This is an automated message. Please do not reply to this email.
+          </p>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Send notifications in batches
+   */
+  async sendBatchNotifications(
+    recipients: any[],
+    type: 'email' | 'sms' | 'both',
+    message: string,
+    subject?: string,
+    batchSize: number = 20
+  ): Promise<{ sent: number; failed: number; errors: string[] }> {
+    let totalSent = 0;
+    let totalFailed = 0;
+    const errors: string[] = [];
+
+    // Process recipients in batches
+    for (let i = 0; i < recipients.length; i += batchSize) {
+      const batch = recipients.slice(i, i + batchSize);
+      
+      try {
+        if (type === 'email' || type === 'both') {
+          const emailPromises = batch
+            .filter(recipient => recipient.email)
+            .map(async (recipient) => {
+              try {
+                const html = this.createEmailTemplate(message, recipient.name);
+                await sendEmail({
+                  to: recipient.email,
+                  subject: subject || 'Event Hall Notification',
+                  html
+                });
+                return { success: true };
+              } catch (error: any) {
+                errors.push(`Email failed for ${recipient.email}: ${error.message}`);
+                return { success: false };
+              }
+            });
+
+          const emailResults = await Promise.allSettled(emailPromises);
+          const emailSent = emailResults.filter(result => 
+            result.status === 'fulfilled' && result.value.success
+          ).length;
+          const emailFailed = emailResults.length - emailSent;
+          
+          totalSent += emailSent;
+          totalFailed += emailFailed;
+        }
+
+        if (type === 'sms' || type === 'both') {
+          const smsPromises = batch
+            .filter(recipient => recipient.phone)
+            .map(async (recipient) => {
+              try {
+                await sendSMS(recipient.phone, message);
+                return { success: true };
+              } catch (error: any) {
+                errors.push(`SMS failed for ${recipient.phone}: ${error.message}`);
+                return { success: false };
+              }
+            });
+
+          const smsResults = await Promise.allSettled(smsPromises);
+          const smsSent = smsResults.filter(result => 
+            result.status === 'fulfilled' && result.value.success
+          ).length;
+          const smsFailed = smsResults.length - smsSent;
+          
+          totalSent += smsSent;
+          totalFailed += smsFailed;
+        }
+
+        // Add delay between batches to avoid rate limiting
+        if (i + batchSize < recipients.length) {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+      } catch (error: any) {
+        logger.error(`Batch processing error:`, error);
+        errors.push(`Batch error: ${error.message}`);
+        totalFailed += batch.length;
+      }
+    }
+
+    return { sent: totalSent, failed: totalFailed, errors };
+  }
+
+  /**
+   * Process notification job in background
+   */
+  async processNotificationJob(jobData: NotificationJob): Promise<void> {
+    try {
+      logger.info(`Starting notification job for ${jobData.totalRecipients} recipients`);
+      
+      const result = await this.sendBatchNotifications(
+        jobData.recipients,
+        jobData.type,
+        jobData.message,
+        jobData.subject
+      );
+
+      logger.info(`Notification job completed: ${result.sent} sent, ${result.failed} failed`);
+      
+      if (result.errors.length > 0) {
+        logger.warn('Notification errors:', result.errors);
+      }
+
+    } catch (error: any) {
+      logger.error('Notification job failed:', error);
+      throw error;
+    }
+  }
 }
