@@ -63,7 +63,7 @@ import { logger } from './logger';
 // Looking to send emails in production? Check out our Email API/SMTP product!
 var transporter = nodemailer.createTransport({
   host: "mail.privateemail.com", // Changed to Namecheap's server
-  port: 465,
+  port: 587,
   secure: false, // SSL/TLS for port 465
   auth: {
     user: "hello@themorayobrownshow.com",
