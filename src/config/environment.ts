@@ -12,10 +12,14 @@ export const config = {
         frontendUrl: process.env.FRONTEND_URL!,
     },
 
-    // Mailtrap Configuration
-    mailtrap: {
-        token: process.env.MAILTRAP_TOKEN!,
-        senderEmail: process.env.MAILTRAP_SENDER_EMAIL || 'noreply@baas.com',
+    // Mail Configuration
+    mail: {
+        host: process.env.MAIL_HOST || 'mail.themorayobrownshow.com',
+        port: parseInt(process.env.MAIL_PORT || '465', 10),
+        secure: process.env.MAIL_SECURE === 'true',
+        senderEmail: process.env.MAIL_SENDER_EMAIL || 'hello@themorayobrownshow.com',
+        password: process.env.MAIL_PASSWORD || 'g!)(wE18yu-j',
+        from: process.env.MAIL_FROM || 'The Morayo Brown Show <hello@themorayobrownshow.com>',
     },
 
     // JWT Configuration
@@ -42,7 +46,13 @@ export const config = {
 // Validate required environment variables
 const requiredEnvVars: string[] | undefined = [
     'MONGODB_URI',
-    'FRONTEND_URL'
+    'FRONTEND_URL',
+    'MAIL_HOST',
+    'MAIL_PORT',
+    'MAIL_SECURE',
+    'MAIL_SENDER_EMAIL',
+    'MAIL_PASSWORD',
+    'MAIL_FROM'
 ];
 
 const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);

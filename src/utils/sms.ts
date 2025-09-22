@@ -17,6 +17,6 @@ export const sendSMS = async (phone: string | string[], message: string) => {
         logger.info('SMS sent:', result);
     } catch (err) {
         logger.error('SMS error:', err);
-        throw err;
+        // throw err;
     }
 };

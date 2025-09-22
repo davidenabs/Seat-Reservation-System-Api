@@ -62,39 +62,40 @@ import { logger } from './logger';
 
 // Looking to send emails in production? Check out our Email API/SMTP product!
 var transporter = nodemailer.createTransport({
-  host: "mail.themorayobrownshow.com",
+  host: "mail.privateemail.com", // Changed to Namecheap's server
   port: 465,
-  secure: true, 
+  secure: true, // SSL/TLS for port 465
   auth: {
     user: "hello@themorayobrownshow.com",
-    pass: "g!)(wE18yu-j"
+    pass: process.env.SMTP_PASS || "g!)(wE18yu-j" // Use your Private Email password
   },
-   tls: {
-    // Disable certificate validation
-    rejectUnauthorized: false
+  // Remove tls.rejectUnauthorized in production for security
+  tls: {
+    rejectUnauthorized: process.env.NODE_ENV === "production" ? true : false
   }
 });
 
 export const sendEmail = async ({ to, subject, html }: { to: string; subject: string; html: string }) => {
   try {
     await transporter.sendMail({
-      from: "hello@themorayobrownshow.com",
+      from: '"The Morayo Brown Show" <hello@themorayobrownshow.com>', // Valid format
       to,
       subject,
       html
     });
     logger.info(`Email sent to ${to}`);
   } catch (err) {
-    // Extract only serializable error properties
     const errorInfo = {
-      message: err instanceof Error ? err.message : 'Unknown error',
+      message: err instanceof Error ? err.message : "Unknown error",
       code: (err as any)?.code,
       command: (err as any)?.command,
-      response: (err as any)?.response,
-      responseCode: (err as any)?.responseCode
+      hostname: (err as any)?.hostname,
+      syscall: (err as any)?.syscall
     };
-
-    console.error('Email error:', errorInfo);
+    logger.error("Email error:", errorInfo);
+    if (errorInfo.code === "EDNS" && errorInfo.syscall === "getaddrinfo") {
+      logger.error(`DNS resolution failed for ${errorInfo.hostname}. Verify SMTP hostname.`);
+    }
     throw err;
   }
 };

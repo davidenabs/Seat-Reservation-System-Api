@@ -13,7 +13,7 @@ import appHealth from './routes/AppHealth';
 import authRoute from './routes/auth';
 import { logger } from './utils/logger';
 import { errorHandler } from './middleware/errorHandler';
-// import { authenticateAdmin } from './middleware/auth';
+import { authenticateAdmin } from './middleware/auth';
 
 // import swaggerUi from 'swagger-ui-express';
 // import swaggerJSDoc from 'swagger-jsdoc';
@@ -65,7 +65,7 @@ const limiter = rateLimit({
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5173'],
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5174'],
   credentials: true
 }));
  app.disable('x-powered-by');
@@ -88,7 +88,7 @@ app.get('/health', appHealth);
 // Routes
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/auth', authRoute);
-app.use('/api/admin', adminRoutes);
+app.use('/api/admin', authenticateAdmin, adminRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {
