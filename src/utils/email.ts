@@ -64,7 +64,7 @@ import { logger } from './logger';
 var transporter = nodemailer.createTransport({
   host: "mail.privateemail.com", // Changed to Namecheap's server
   port: 465,
-  secure: true, // SSL/TLS for port 465
+  secure: false, // SSL/TLS for port 465
   auth: {
     user: "hello@themorayobrownshow.com",
     pass: process.env.SMTP_PASS || "g!)(wE18yu-j" // Use your Private Email password
